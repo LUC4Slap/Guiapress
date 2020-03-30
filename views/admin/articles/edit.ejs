@@ -1,0 +1,64 @@
+<%- include('../../partials/header.ejs') %> <%-
+include('../../partials/navbar.ejs') %>
+<div class="container mt-3">
+  <div class="card">
+    <div class="card-header">
+      <h2>Editar artigo</h2>
+    </div>
+    <div class="card-body">
+      <form action="/articles/update" method="POST">
+        <input type="hidden" name="id" value="<%= article.id %>">
+        <input
+          class="form-control"
+          type="text"
+          name="title"
+          value="<%= article.title %>"
+          placeholder="Defina o título do artigo"
+          required
+        />
+        <br />
+        <textarea
+          class="form-control mt-2"
+          placeholder="Escreva o artigo"
+          name="body"
+          id="article"
+          cols="40" rows="10"
+        >
+        <!-- Forma de pegar colocar o conteudo que vem da rota e colocar no texte area -->
+        <!-- <%= article.body %> -->
+        </textarea>
+        <br>
+        <label for="categoria">Categoria</label>
+        <select class="form-control" name="category">
+          <% categories.forEach(category => { %>
+            <% if(category.id == article.categoryId) { %>
+                <option value="<%= category.id %>" selected><%= category.title %></option>
+            <% } else { %>
+                <option value="<%= category.id %>"><%= category.title %></option>
+            <% } %>
+          <% }) %>
+        </select>
+        <button class="btn btn-primary mt-2">Atualizar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="content" style="display: none;">
+    <%- article.body %>
+</div>
+
+<%- include('../../partials/footer.ejs') %>
+<script src="/tinymce/js/tinymce/tinymce.min.js"></script>
+<script>
+  tinymce.init({
+    language: 'pt_BR',
+    selector: '#article',
+    plugins: [
+      'advlist autolink link image list print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons',
+    ],
+    init_instance_callback: () => {
+        tinymce.get("article").setContent($("#content").html())
+    }
+  });
+</script>
